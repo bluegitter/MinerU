@@ -22,6 +22,7 @@ pip install magic-pdf[full-cpu]
 pip install magic-pdf
 pip install unimernet==0.1.0
 pip install matplotlib ultralytics paddleocr==2.7.3 paddlepaddle
+pip install detectron2 --extra-index-url https://myhloli.github.io/wheels/ 
 ```
 
 ### 4.在部分较新的M芯片macOS设备上，MPS加速开启失败
@@ -36,16 +37,13 @@ pip install --pre torch torchvision --index-url https://download.pytorch.org/whl
 ### 5.使用过程中遇到paddle相关的报错FatalError: Illegal instruction is detected by the operating system.
 
 paddlepaddle 2.6.1与部分linux系统环境存在兼容性问题。
-可尝试降级到2.5.2使用，
+可尝试~~降级到2.5.2~~升级到3.0.0b1使用，
 ```bash
-pip install paddlepaddle==2.5.2
+pip install paddlepaddle==3.0.0b1
 ```
-或卸载paddlepaddle，重新安装paddlepaddle-gpu
-```bash
-pip uninstall paddlepaddle
-pip install paddlepaddle-gpu
-```
-参考：https://github.com/opendatalab/MinerU/issues/146
+~~或卸载paddlepaddle，重新安装paddlepaddle-gpu~~
+
+参考：https://github.com/opendatalab/MinerU/issues/224
 
 ### 6.使用过程中遇到_pickle.UnpicklingError: invalid load key, 'v'.错误
 
@@ -83,3 +81,18 @@ model_json 指的是通过模型分析后生成的一种有特定格式的json�
 如果使用 https://github.com/opendatalab/PDF-Extract-Kit 项目生成，该文件一般在项目的output目录下。  
 如果使用 MinerU 的命令行调用内置的模型分析，该文件一般在输出路径"/tmp/magic-pdf/pdf-name"下。  
 参考：https://github.com/opendatalab/MinerU/issues/128
+
+### 10.Linux下报错：Required dependency not installed, please install by "pip install magic-pdf[full-cpu] detectron2 --extra-index-url https://myhloli.github.io/wheels/"
+
+这种情况可以先使用pip list 检查一下自己的依赖库列表，重点确认下以下几个库有没有安装（版本不一定完全一致，有就可以）
+```bash
+opencv-contrib-python     4.6.0.66
+opencv-python             4.6.0.66
+opencv-python-headless    4.10.0.84
+paddleocr                 2.7.3
+paddlepaddle              2.6.1
+torch                     2.2.2
+torchtext                 0.17.2
+torchvision               0.17.2
+```
+如果都有的话，可能是libgl库没有安装，参考 https://github.com/opendatalab/MinerU/issues/165#issuecomment-2245202282 安装libgl库后再试试能不能正常使用。

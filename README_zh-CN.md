@@ -1,4 +1,8 @@
-<div id="top"></div>
+<div id="top">
+<p align="center">
+  <img src="docs/images/MinerU-logo.png" width="160px" style="vertical-align:middle;">
+</p>
+</div>
 <div align="center">
 
 [![stars](https://img.shields.io/github/stars/opendatalab/MinerU.svg)](https://github.com/opendatalab/MinerU)
@@ -8,13 +12,21 @@
 [![PyPI version](https://badge.fury.io/py/magic-pdf.svg)](https://badge.fury.io/py/magic-pdf)
 [![Downloads](https://static.pepy.tech/badge/magic-pdf)](https://pepy.tech/project/magic-pdf)
 [![Downloads](https://static.pepy.tech/badge/magic-pdf/month)](https://pepy.tech/project/magic-pdf)
+<a href="https://trendshift.io/repositories/11174" target="_blank"><img src="https://trendshift.io/api/badge/repositories/11174" alt="opendatalab%2FMinerU | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
-[English](README.md) | [简体中文](README_zh-CN.md)
+[English](README.md) | [简体中文](README_zh-CN.md) | [日本語](README_ja-JP.md)
 
 </div>
 
 <div align="center">
+<p align="center">
+<a href="https://github.com/opendatalab/MinerU">MinerU: 端到端的PDF解析工具（基于PDF-Extract-Kit）支持PDF转Markdown</a>🚀🚀🚀<br>
+<a href="https://github.com/opendatalab/PDF-Extract-Kit">PDF-Extract-Kit: 高质量PDF解析工具箱</a>🔥🔥🔥
+</p>
 
+<p align="center">
+    👋 join us on <a href="https://discord.gg/AsQMhuMN" target="_blank">Discord</a> and <a href="https://cdn.vansin.top/internlm/mineru.jpg" target="_blank">WeChat</a>
+</p>
 </div>
 
 # MinerU 
@@ -47,7 +59,7 @@ Magic-PDF 是一款将 PDF 转化为 markdown 格式的工具。支持转换本�
 - 支持windows/linux/mac平台
 
 
-https://github.com/opendatalab/MinerU/assets/11393164/618937cb-dc6a-4646-b433-e3131a5f4070
+https://github.com/user-attachments/assets/4bea02c9-6d54-4cd6-97ed-dff14340982c
 
 
 
@@ -83,16 +95,23 @@ conda activate MinerU
 #### 1. 安装Magic-PDF
 
 使用pip安装完整功能包：
->受pypi限制，pip安装的完整功能包仅支持cpu推理，建议只用于快速测试解析能力。
+> 受pypi限制，pip安装的完整功能包仅支持cpu推理，建议只用于快速测试解析能力。
 >
->如需在生产环境使用CUDA/MPS加速请参考[使用CUDA或MPS加速推理](#4-使用CUDA或MPS加速推理)
+> 如需在生产环境使用CUDA/MPS加速请参考[使用CUDA或MPS加速推理](#4-使用CUDA或MPS加速推理)
 ```bash
-pip install magic-pdf[full-cpu]
+pip install magic-pdf[full-cpu] -i https://pypi.tuna.tsinghua.edu.cn/simple 
 ```
+> ❗️已收到多起由于镜像源和依赖冲突问题导致安装了错误版本软件包的反馈，请务必安装完成后通过以下命令验证版本是否正确
+> ```bash
+> magic-pdf --version
+> ```
+> 如版本低于0.6.x，请提交issue进行反馈。
+
 完整功能包依赖detectron2，该库需要编译安装，如需自行编译，请参考 https://github.com/facebookresearch/detectron2/issues/5114  
-或是直接使用我们预编译的whl包(仅限python 3.10)：  
+或是直接使用我们预编译的whl包：
+> ❗️预编译版本仅支持64位系统(windows/linux/macOS)+pyton 3.10平台；不支持任何32位系统和非mac的arm平台，如系统不支持请自行编译安装。
 ```bash
-pip install detectron2 --extra-index-url https://myhloli.github.io/wheels/
+pip install detectron2 --extra-index-url https://myhloli.github.io/wheels/ -i https://pypi.tuna.tsinghua.edu.cn/simple 
 ```
 
 #### 2. 下载模型权重文件
@@ -101,11 +120,14 @@ pip install detectron2 --extra-index-url https://myhloli.github.io/wheels/
 下载后请将models目录移动到空间较大的ssd磁盘目录  
 
 #### 3. 拷贝配置文件并进行配置
-在仓库根目录可以获得 [magic-pdf.template.json](magic-pdf.template.json) 文件
+在仓库根目录可以获得 [magic-pdf.template.json](magic-pdf.template.json) 配置模版文件
+> ❗️务必执行以下命令将配置文件拷贝到用户目录下，否则程序将无法运行
 ```bash
 cp magic-pdf.template.json ~/magic-pdf.json
 ```
-在magic-pdf.json中配置"models-dir"为模型权重文件所在目录
+
+在用户目录中找到magic-pdf.json文件并配置"models-dir"为[2. 下载模型权重文件](#2-下载模型权重文件)中下载的模型权重文件所在目录
+> ❗️务必正确配置模型权重文件所在目录，否则会因为找不到模型文件而导致程序无法运行
 ```json
 {
   "models-dir": "/tmp/models"
@@ -235,7 +257,7 @@ https://github.com/opendatalab/MinerU/assets/11393164/20438a02-ce6c-4af8-9dde-d7
 
 ## 感谢我们的贡献者
 
-<a href="https://github.com/magicpdf/Magic-PDF/graphs/contributors">
+<a href="https://github.com/opendatalab/MinerU/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=opendatalab/MinerU" />
 </a>
 
@@ -275,3 +297,8 @@ https://github.com/opendatalab/MinerU/assets/11393164/20438a02-ce6c-4af8-9dde-d7
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=opendatalab/MinerU&type=Date" />
  </picture>
 </a>
+
+## 友情链接
+- [LabelU (轻量级多模态标注工具)](https://github.com/opendatalab/labelU)
+- [LabelLLM (开源LLM对话标注平台)](https://github.com/opendatalab/LabelLLM)
+- [PDF-Extract-Kit (用于高质量PDF内容提取的综合工具包)](https://github.com/opendatalab/PDF-Extract-Kit))

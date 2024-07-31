@@ -18,8 +18,8 @@ on:
   workflow_dispatch:
 jobs:
   cli-test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
+    runs-on: pdf
+    timeout-minutes: 180
     strategy:
       fail-fast: true
 
@@ -31,24 +31,19 @@ jobs:
       
     - name: check-requirements
       run: |
-        pip install -r requirements.txt
-        pip install -r requirements-qa.txt
-        pip install magic-pdf
-    - name: test_cli
+        source ~/.bashrc
+        pip install magic-pdf[full-cpu]==0.6.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
+        pip install https://raw.githubusercontent.com/myhloli/wheels/main/assets/whl/detectron2/detectron2-0.6-cp310-cp310-linux_x86_64.whl
+
+    - name: gpu-bench
       run: |
-        cp magic-pdf.template.json ~/magic-pdf.json
         echo $GITHUB_WORKSPACE
-        cd $GITHUB_WORKSPACE && export PYTHONPATH=. && pytest -s -v tests/test_unit.py
-        cd $GITHUB_WORKSPACE &&  pytest -s -v tests/test_cli/test_cli.py
-                                                                                                                            
-    - name: benchmark
-      run: |
-        cd $GITHUB_WORKSPACE &&  pytest -s -v tests/test_cli/test_bench.py
+        cd $GITHUB_WORKSPACE &&  pytest -s -v tests/test_cli/test_bench_gpu.py
 
   notify_to_feishu:
     if: ${{ always() && !cancelled() && contains(needs.*.result, 'failure') && (github.ref_name == 'master') }}
     needs: [cli-test]
-    runs-on: ubuntu-latest
+    runs-on: pdf
     steps:
     - name: get_actor
       run: |
@@ -72,4 +67,5 @@ jobs:
         "text": {
             "mentioned_list": ["${{ env.METIONS }}"] , "content": "'${{ github.repository }}' GitHubAction Failed!\n 细节请查看：https://github.com/'${{ github.repository }}'/actions/runs/'${GITHUB_RUN_ID}'"
         }
-        }'   
+        }'                                                                                                                
+ 
