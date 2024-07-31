@@ -1,3 +1,9 @@
+---
+title: MinerU
+app_file: ./demo/app.py
+sdk: gradio
+sdk_version: 4.39.0
+---
 <div id="top"></div>
 <div align="center">
 

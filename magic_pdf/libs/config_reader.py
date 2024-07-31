@@ -12,9 +12,12 @@ from magic_pdf.libs.commons import parse_bucket_key
 
 
 def read_config():
-    home_dir = os.path.expanduser("~")
+    # home_dir = os.path.expanduser("~")
 
-    config_file = os.path.join(home_dir, "magic-pdf.json")
+    # config_file = os.path.join(home_dir, "magic-pdf.json")
+
+    working_dir = os.getcwd()
+    config_file = os.path.join(working_dir, "magic-pdf.json")
 
     if not os.path.exists(config_file):
         raise Exception(f"{config_file} not found")
@@ -45,7 +48,8 @@ def get_s3_config(bucket_name: str):
 
 
 def get_s3_config_dict(path: str):
-    access_key, secret_key, storage_endpoint = get_s3_config(get_bucket_name(path))
+    access_key, secret_key, storage_endpoint = get_s3_config(
+        get_bucket_name(path))
     return {"ak": access_key, "sk": secret_key, "endpoint": storage_endpoint}
 
 
@@ -56,12 +60,12 @@ def get_bucket_name(path):
 
 def get_local_dir():
     config = read_config()
-    return config.get("temp-output-dir", "/tmp")
+    return config.get("temp-output-dir", "./tmp")
 
 
 def get_local_models_dir():
     config = read_config()
-    return config.get("models-dir", "/tmp/models")
+    return config.get("models-dir", "./models")
 
 
 def get_device():
