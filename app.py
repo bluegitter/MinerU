@@ -15,7 +15,6 @@ model_config.__use_inside_model__ = True
 app = Flask(__name__, static_folder='web')  # 设置静态文件目录
 CORS(app)  # 启用CORS
 
-
 @app.route('/pdf-extract', methods=['POST'])
 def pdf_extract():
     if 'file' not in request.files:
@@ -29,14 +28,17 @@ def pdf_extract():
         try:
             # Save the file to a temporary location
             temp_dir = tempfile.TemporaryDirectory()
+            print(temp_dir.name)
             pdf_path = os.path.join(temp_dir.name, file.filename)
+            print(pdf_path)
             file.save(pdf_path)
 
             pdf_bytes = open(pdf_path, "rb").read()
             model_json = []  # Using internal model
             jso_useful_key = {"_pdf_type": "", "model_list": model_json}
-            local_image_dir = os.path.join(temp_dir.name, 'images')
+            local_image_dir = os.path.join(os.curdir, 'images')
             image_writer = DiskReaderWriter(local_image_dir)
+            print(local_image_dir)
             pipe = UNIPipe(pdf_bytes, jso_useful_key, image_writer)
 
             # 根据pdf的元数据，判断是文本pdf，还是ocr pdf
@@ -52,7 +54,7 @@ def pdf_extract():
             pipe.pipe_parse()
             md_content = pipe.pipe_mk_markdown(
                 local_image_dir, drop_mode="none")
-            temp_dir.cleanup()  # Clean up the temporary directory
+            # temp_dir.cleanup()  # Clean up the temporary directory
             return jsonify({'markdown': md_content})
 
         except Exception as e:
@@ -70,6 +72,10 @@ def serve_static(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
+@app.route('/images/<path:filename>')
+def serve_additional_static(filename):
+    additional_static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images')
+    return send_from_directory(additional_static_folder, filename)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
